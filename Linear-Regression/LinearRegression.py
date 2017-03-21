@@ -5,7 +5,7 @@ Created on Wed Mar 08 09:34:26 2017
 @author: Swapnil.Walke
 """
 
-from numpy import *
+import numpy as np
 
 def compute_error(b, m, points):
     total_error = 0
@@ -21,7 +21,7 @@ def gradient_descent_runner(points, starting_b, starting_m, learning_rate, num_i
     m = starting_m
     
     for i in range(num_iterations):
-        b, m = step_gradient(b, m, array(points), learning_rate)
+        b, m = step_gradient(b, m, numpy.array(points), learning_rate)
     
     return [b, m]
 
