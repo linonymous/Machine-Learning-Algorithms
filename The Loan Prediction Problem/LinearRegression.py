@@ -7,7 +7,7 @@ Created on Sat Mar 18 21:49:04 2017
 import re
 import numpy as np
 import pandas as pd
-
+import string
 """functions for data cleaning"""
 
 
@@ -40,7 +40,21 @@ def id_verified(value):
 def conv_lower(value):
     if not isfloat(value):
         return value.lower()
-        
+
+title = {}
+@static_vars(a=1)
+def change_title(value):
+    value = str(value)
+    if isNan(value):
+        return 0
+    value = value.lower()
+    if value not in title.keys():
+        title[value] = change_title.a
+        change_title.a = change_title.a + 1
+        return title[value]
+    else:
+        return title[value]
+    
 def home_ownership(value):
     value = str(value)
     if value == "ANY":
@@ -52,6 +66,20 @@ def home_ownership(value):
     elif value == "RENT":
         return 3
 
+state={}
+@static_vars(b=1)
+def change_addr_state(value):
+    value = str(value)
+    if isNan(value):
+        return 0
+    value = value.lower()
+    if value not in state.keys():
+        state[value] = change_addr_state.b
+        change_addr_state.b = change_addr_state.b + 1
+        return state[value]
+    else:
+        return state[value]
+    
 grade = {}
 @static_vars(g=0)
 def grade_value(value):
@@ -79,6 +107,7 @@ def emp_value(value):
     value= str(value)
     if isNan(value):
         return 0
+    value = value.lower()
     if value not in emp.keys():
         emp[value] = emp_value.g
         emp_value.g = emp_value.g + 1
@@ -86,8 +115,44 @@ def emp_value(value):
     else:
         return emp[value]
     
+def change_emp_length(year):
+    year = str(year)
+    if isNan(year):
+        return 0
+    else:
+        all = string.maketrans('','')
+        nodigs = all.translate(all, string.digits)
+        year = year.translate(all, nodigs)
+        return year
 
-
+def change_desc(value):
+    value = str(value)
+    if isNan(value):
+        return 0
+    else:
+        return 1
+    
+purp = {}
+@static_vars(g=1)
+def change_purpose(value):
+    value= str(value)
+    if isNan(value):
+        return 0
+    value = value.lower()
+    if value not in purp.keys():
+        purp[value] = change_purpose.g
+        change_purpose.g = change_purpose.g + 1
+        return purp[value]
+    else:
+        return purp[value]
+    
+def change_pymnt_plan(plan):
+    plan = str(plan)
+    if plan == 'n':
+        return 1
+    else:
+        return 0
+    
 df = pd.read_csv("train_indessa.csv")
 #print df.iloc[0,:]
 
@@ -133,7 +198,13 @@ x = 0
 #df['home_ownership'] = df.apply(lambda row: home_ownership(row['home_ownership']), axis=1)
 #df['grade'] = df.apply(lambda row: grade_value(row['grade']), axis=1)
 #df['sub_grade'] = df.apply(lambda row: sub_grade_value(row['sub_grade']), axis=1)
-df['emp_title'] = df.apply(lambda row: emp_value(row['emp_title']), axis=1)
+#df['emp_title'] = df.apply(lambda row: emp_value(row['emp_title']), axis=1)
+#df['emp_length'] = df.apply(lambda row: change_emp_length(row['emp_length']), axis=1)
+#df['pymnt_plan'] = df.apply(lambda row: change_pymnt_plan(row['pymnt_plan']), axis=1)
+#df['desc'] = df.apply(lambda row: change_desc(row['desc']), axis=1)
+#df['purpose'] = df.apply(lambda row: change_purpose(row['purpose']), axis=1)
+#df['title'] = df.apply(lambda row: change_title(row['title']), axis=1)
+df['addr_state'] = df.apply(lambda row: change_addr_state(row['addr_state']), axis=1)
 print df.iloc[1,:]
 for index, row in df.iterrows():
     print row['application_type']
