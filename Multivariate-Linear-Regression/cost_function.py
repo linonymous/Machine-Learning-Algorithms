@@ -7,4 +7,4 @@ def cost_function(input_x, output_y, theta):
     for tupl in input_x:
         err += (hypothesis(tupl, theta) - output_y[index]) **2
         index += 1
-    return (1.0/2.0) * len(output_y) * float(err)
+    return (1.0/ (2.0 * float(len(output_y)))) * float(err)
