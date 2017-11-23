@@ -18,7 +18,7 @@ data = np.loadtxt("train.csv",delimiter=",")
 input_x = data[:,0]
 input_y = data[:,1]
 theta = init_theta(2)
-theta = gradient_descent_runner(input_x, input_y, theta, num_iterations=2000, learning_rate=0.001)
+theta = gradient_descent_runner(input_x, input_y, theta, num_iterations=2000, learning_rate=0.0001)
 print theta
 
 test = np.loadtxt("train.csv",delimiter=",")
